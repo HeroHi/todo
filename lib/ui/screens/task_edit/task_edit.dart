@@ -4,26 +4,35 @@ import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/tasks_provider.dart';
 import 'package:todo_app/ui/screens/home/tabs/tasks/task_card.dart';
 import 'package:todo_app/utils/app_text_styles.dart';
-import 'package:todo_app/widgets/my_date_picker.dart';
+import 'package:todo_app/utils/extensions/datetime_extension.dart';
 import 'package:todo_app/widgets/my_text_field.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
 import '../../../utils/app_colors.dart';
 
-class TaskEdit extends StatelessWidget {
-  late ThemeData theme;
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
-  late TasksProvider tasksProvider;
+class TaskEdit extends StatefulWidget {
   static String routeName = "taskEdit";
 
-  TaskEdit({super.key});
+  const TaskEdit({super.key});
+
+  @override
+  State<TaskEdit> createState() => _TaskEditState();
+}
+
+class _TaskEditState extends State<TaskEdit> {
+  late ThemeData theme;
+
+  TextEditingController titleController = TextEditingController();
+  TimeOfDay time = TimeOfDay.now();
+  TextEditingController descriptionController = TextEditingController();
+  late TaskModel taskModel;
+  late TasksProvider tasksProvider;
 
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     tasksProvider = Provider.of(context);
+    taskModel = ModalRoute.of(context)!.settings.arguments as TaskModel;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -47,8 +56,6 @@ class TaskEdit extends StatelessWidget {
   }
 
   Container _buildEditBox(BuildContext context) {
-    TaskModel taskModel =
-        ModalRoute.of(context)!.settings.arguments as TaskModel;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 55),
@@ -80,7 +87,13 @@ class TaskEdit extends StatelessWidget {
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.start,
           ),
-          MyDatePicker(selectedDate: selectedDate),
+          _buildTimePicker(),
+          Text(
+            "Select Date",
+            style: theme.textTheme.titleLarge,
+            textAlign: TextAlign.start,
+          ),
+          _buildDatePicker(),
           ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
@@ -90,11 +103,14 @@ class TaskEdit extends StatelessWidget {
                     taskId: taskModel.id,
                     title: titleController.text,
                     description: descriptionController.text,
-                    date: selectedDate,
+                    date: taskModel.date,
                     isDone: taskModel.isDone);
+                taskModel.title = titleController.text;
+                taskModel.description = descriptionController.text;
                 showToast(
                     msg: "Task edited successfully",
                     color: AppColors.doneColor);
+                setState(() {});
               },
               child: Text(
                 "Save Changes",
@@ -120,6 +136,54 @@ class TaskEdit extends StatelessWidget {
               width: MediaQuery.sizeOf(context).width),
         ),
       ],
+    );
+  }
+
+  Future<void> _showMyDatePicker() async {
+    taskModel.date = await (showDatePicker(
+            initialDate: taskModel.date,
+            currentDate: taskModel.date,
+            context: context,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2026))) ??
+        taskModel.date;
+  }
+
+  Widget _buildDatePicker() {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          await _showMyDatePicker();
+          setState(() {});
+        },
+        child: Text(
+          taskModel.date.formattedDate(),
+          style: theme.textTheme.labelMedium,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showMyTimePicker() async {
+    time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(taskModel.date)) ??
+        time;
+    taskModel.date =
+        taskModel.date.copyWith(hour: time.hour, minute: time.minute);
+  }
+
+  Widget _buildTimePicker() {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          await _showMyTimePicker();
+        },
+        child: Text(
+          time.toString(),
+          style: theme.textTheme.labelMedium,
+        ),
+      ),
     );
   }
 }

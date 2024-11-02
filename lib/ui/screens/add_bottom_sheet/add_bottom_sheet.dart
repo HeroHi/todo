@@ -5,13 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/models/user_model.dart';
 import 'package:todo_app/providers/tasks_provider.dart';
-import 'package:todo_app/widgets/my_date_picker.dart';
+import 'package:todo_app/utils/extensions/datetime_extension.dart';
 import 'package:todo_app/widgets/my_text_field.dart';
 
 import '../../../utils/app_colors.dart';
 
 class AddBottomSheet extends StatefulWidget {
-  AddBottomSheet({super.key});
+  const AddBottomSheet({super.key});
 
   @override
   State<AddBottomSheet> createState() => _AddBottomSheetState();
@@ -20,7 +20,8 @@ class AddBottomSheet extends StatefulWidget {
 class _AddBottomSheetState extends State<AddBottomSheet> {
   late ThemeData theme;
   late TasksProvider tasksProvider;
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate = DateTime.timestamp();
+  TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -35,27 +36,28 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
         color: theme.primaryColor,
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             "Add New Task",
             style: theme.textTheme.titleMedium!
                 .copyWith(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40),
-            child: MyTextField(
-                hintText: "enter your title", controller: titleController),
-          ),
+          MyTextField(
+              hintText: "enter your title", controller: titleController),
           MyTextField(
               hintText: "enter task description",
               controller: descriptionController),
-          const SizedBox(
-            height: 80,
+          Text(
+            "Select Date",
+            style: theme.textTheme.titleMedium,
+            textAlign: TextAlign.start,
           ),
-          MyDatePicker(selectedDate: selectedDate),
-          const SizedBox(
-            height: 20,
-          ),
+          _buildDatePicker(),
+          Text("Select Time", style: theme.textTheme.titleMedium),
+          _buildTimePicker(),
           ElevatedButton(
               style:
                   ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
@@ -86,5 +88,54 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
         date: selectedDate,
         isDone: false);
     await documentReference.set(task.toJson());
+  }
+
+  Future<void> _showMyDatePicker() async {
+    selectedDate = await (showDatePicker(
+            initialDate: DateTime.now(),
+            currentDate: selectedDate,
+            context: context,
+            firstDate: DateTime.now(),
+            lastDate: DateTime(2026))) ??
+        selectedDate;
+  }
+
+  Widget _buildDatePicker() {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          await _showMyDatePicker();
+          setState(() {});
+        },
+        child: Text(
+          selectedDate.formattedDate(),
+          style: theme.textTheme.labelMedium,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showMyTimePicker() async {
+    selectedTime = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(selectedDate)) ??
+        selectedTime;
+    selectedDate = selectedDate.copyWith(
+        hour: selectedTime.hour, minute: selectedTime.minute);
+  }
+
+  Widget _buildTimePicker() {
+    return Center(
+      child: InkWell(
+        onTap: () async {
+          await _showMyTimePicker();
+          setState(() {});
+        },
+        child: Text(
+          selectedTime.toString(),
+          style: theme.textTheme.labelMedium,
+        ),
+      ),
+    );
   }
 }

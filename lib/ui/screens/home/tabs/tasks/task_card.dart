@@ -50,6 +50,11 @@ class _TaskCardState extends State<TaskCard> {
               Text(
                 widget.taskModel.description,
                 style: widget.theme.textTheme.titleMedium,
+              ),
+              Text(
+                "${widget.taskModel.date.hour}:${widget.taskModel.date.minute}",
+                style:
+                    widget.theme.textTheme.labelMedium!.copyWith(fontSize: 15),
               )
             ],
           ),
