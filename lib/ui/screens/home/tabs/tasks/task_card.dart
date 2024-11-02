@@ -61,23 +61,23 @@ class _TaskCardState extends State<TaskCard> {
   }
 
   _buildState(Color stateColor) {
-    return widget.taskModel.isDone
-        ? Text(
-            "Done!",
-            style: AppTextStyles.bold.copyWith(color: stateColor),
-          )
-        : InkWell(
-            onTap: () {
-              widget.taskModel.isDone = !widget.taskModel.isDone;
-              tasksProvider.editTaskInFirestore(
-                  taskId: widget.taskModel.id,
-                  title: widget.taskModel.title,
-                  description: widget.taskModel.description,
-                  date: widget.taskModel.date,
-                  isDone: true);
-              setState(() {});
-            },
-            child: Container(
+    return InkWell(
+      onTap: () {
+        widget.taskModel.isDone = !widget.taskModel.isDone;
+        tasksProvider.editTaskInFirestore(
+            taskId: widget.taskModel.id,
+            title: widget.taskModel.title,
+            description: widget.taskModel.description,
+            date: widget.taskModel.date,
+            isDone: true);
+        setState(() {});
+      },
+      child: widget.taskModel.isDone
+          ? Text(
+              "Done!",
+              style: AppTextStyles.bold.copyWith(color: stateColor),
+            )
+          : Container(
               width: 70,
               height: 36,
               decoration: BoxDecoration(
@@ -88,6 +88,6 @@ class _TaskCardState extends State<TaskCard> {
                 color: AppColors.white,
               ),
             ),
-          );
+    );
   }
 }

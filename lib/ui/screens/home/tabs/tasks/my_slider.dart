@@ -16,30 +16,20 @@ class MySlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TasksProvider tasksProvider = Provider.of(context);
+    ThemeData theme = Theme.of(context);
     return Container(
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: AppColors.deleteColor),
+            color: AppColors.transparent),
         height: MediaQuery.sizeOf(context).height * 0.132,
         child: Slidable(
           closeOnScroll: true,
           startActionPane: ActionPane(motion: const BehindMotion(), children: [
             SlidableAction(
-              onPressed: (context) {
-                Navigator.pushNamed(context, TaskEdit.routeName,
-                    arguments: taskModel);
-              },
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(15),
                   bottomLeft: Radius.circular(15)),
-              backgroundColor: Colors.blueGrey,
-              foregroundColor: AppColors.black,
-              label: "Edit",
-              icon: Icons.edit,
-            ),
-            SlidableAction(
-              borderRadius: BorderRadius.circular(15),
               onPressed: (_) async {
                 tasksProvider.deleteTaskFromFirestore(taskModel.id);
               },
@@ -48,6 +38,17 @@ class MySlider extends StatelessWidget {
               label: "Delete",
               foregroundColor: Colors.white,
               autoClose: true,
+            ),
+            SlidableAction(
+              onPressed: (context) {
+                Navigator.pushNamed(context, TaskEdit.routeName,
+                    arguments: taskModel);
+              },
+              borderRadius: BorderRadius.circular(15),
+              backgroundColor: Colors.transparent,
+              foregroundColor: theme.primaryColorDark,
+              label: "Edit",
+              icon: Icons.edit,
             ),
           ]),
           child: child,
