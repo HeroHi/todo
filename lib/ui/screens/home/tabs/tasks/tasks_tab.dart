@@ -23,7 +23,7 @@ class _TasksTabState extends State<TasksTab> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      tasksProvider.getTasksFromFirestore();
+      tasksProvider.updateTasks();
     });
   }
 
@@ -92,7 +92,7 @@ class _TasksTabState extends State<TasksTab> {
         activeColor: AppColors.primary,
         onDateChange: (selectedDate) {
           tasksProvider.selectedDate = selectedDate;
-          tasksProvider.getTasksFromFirestore();
+          tasksProvider.updateTasks();
         },
         dayProps: EasyDayProps(
             todayHighlightStyle: TodayHighlightStyle.withBackground,

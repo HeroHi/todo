@@ -26,7 +26,15 @@ class _HomeState extends State<Home> {
     ThemeProvider themeProvider = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("To Do List"),
+        title: Column(
+          children: [
+            const Text("ToDo"),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(FirebaseAuth.instance.currentUser!.displayName!),
+          ],
+        ),
         actions: [
           IconButton(
               onPressed: () async {

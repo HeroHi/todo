@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/firebase_auth/firebase_auth_manager.dart';
 import 'package:todo_app/ui/screens/login/login.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/utils/app_text_styles.dart';
 import 'package:todo_app/widgets/show_toast.dart';
+
+import '../../../firebase/auth/firebase_auth_manager.dart';
 
 class RegisterScreen extends StatefulWidget {
   static String routeName = "Register";
@@ -99,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         msg:
                             "A verification link has been sent to your email please check it and verify your email before logging in",
                         color: AppColors.doneColor);
-                    Timer timer = Timer.periodic(
+                    Timer.periodic(
                       const Duration(seconds: 5),
                       (timer) {
                         FirebaseAuth.instance.currentUser!.reload();

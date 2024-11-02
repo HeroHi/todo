@@ -61,7 +61,7 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                   ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
               onPressed: () {
                 addTaskToFirestore();
-                tasksProvider.getTasksFromFirestore();
+                tasksProvider.updateTasks();
                 Navigator.pop(context);
               },
               child: Text(

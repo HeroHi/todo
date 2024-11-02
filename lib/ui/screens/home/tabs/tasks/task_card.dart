@@ -69,7 +69,7 @@ class _TaskCardState extends State<TaskCard> {
             title: widget.taskModel.title,
             description: widget.taskModel.description,
             date: widget.taskModel.date,
-            isDone: true);
+            isDone: widget.taskModel.isDone);
         setState(() {});
       },
       child: widget.taskModel.isDone

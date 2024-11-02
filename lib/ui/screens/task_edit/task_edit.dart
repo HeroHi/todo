@@ -90,7 +90,8 @@ class TaskEdit extends StatelessWidget {
                     taskId: taskModel.id,
                     title: titleController.text,
                     description: descriptionController.text,
-                    date: selectedDate);
+                    date: selectedDate,
+                    isDone: taskModel.isDone);
                 showToast(
                     msg: "Task edited successfully",
                     color: AppColors.doneColor);

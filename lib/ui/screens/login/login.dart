@@ -7,7 +7,7 @@ import 'package:todo_app/ui/screens/register/register.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
-import '../../../firebase_auth/firebase_auth_manager.dart';
+import '../../../firebase/auth/firebase_auth_manager.dart';
 
 class LoginScreen extends StatelessWidget {
   late ThemeData theme;

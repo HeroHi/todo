@@ -17,6 +17,7 @@ class FirebaseAuthManager {
         email: email,
         password: password,
       );
+      FirebaseAuth.instance.currentUser!.updateDisplayName(userName);
       DocumentReference userDoc = FirebaseFirestore.instance
           .collection(UserModel.collectionName)
           .doc(credential.user!.uid);
