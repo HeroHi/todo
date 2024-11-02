@@ -24,41 +24,38 @@ class _TaskCardState extends State<TaskCard> {
     widget.theme = Theme.of(context);
     Color stateColor =
         widget.taskModel.isDone ? AppColors.doneColor : AppColors.primary;
-    return Hero(
-      tag: widget.taskModel.id,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: widget.theme.primaryColor),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: stateColor),
-              width: 4,
-              height: 64,
-            ),
-            const SizedBox(
-              width: 30,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  widget.taskModel.title,
-                  style: AppTextStyles.bold.copyWith(color: stateColor),
-                ),
-                Text(
-                  widget.taskModel.description,
-                  style: widget.theme.textTheme.titleMedium,
-                )
-              ],
-            ),
-            const Spacer(),
-            _buildState(stateColor)
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: widget.theme.primaryColor),
+      child: Row(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10), color: stateColor),
+            width: 4,
+            height: 64,
+          ),
+          const SizedBox(
+            width: 30,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                widget.taskModel.title,
+                style: AppTextStyles.bold.copyWith(color: stateColor),
+              ),
+              Text(
+                widget.taskModel.description,
+                style: widget.theme.textTheme.titleMedium,
+              )
+            ],
+          ),
+          const Spacer(),
+          _buildState(stateColor)
+        ],
       ),
     );
   }

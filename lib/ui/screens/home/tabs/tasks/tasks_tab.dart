@@ -5,6 +5,7 @@ import 'package:todo_app/providers/tasks_provider.dart';
 import 'package:todo_app/ui/screens/home/tabs/tasks/task_card.dart';
 
 import '../../../../../utils/app_colors.dart';
+import 'my_slider.dart';
 
 class TasksTab extends StatefulWidget {
   late ThemeData theme;
@@ -46,8 +47,17 @@ class _TasksTabState extends State<TasksTab> {
           flex: 7,
           child: ListView.builder(
             itemCount: tasksProvider.tasks.length,
-            itemBuilder: (context, index) => TaskCard(
+            itemBuilder: (context, index) => MySlider(
               taskModel: tasksProvider.tasks[index],
+              child: Hero(
+                tag: tasksProvider.tasks[index].id,
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: TaskCard(
+                    taskModel: tasksProvider.tasks[index],
+                  ),
+                ),
+              ),
             ),
           ),
         )

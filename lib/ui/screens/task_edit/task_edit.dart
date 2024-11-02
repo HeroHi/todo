@@ -67,7 +67,11 @@ class TaskEdit extends StatelessWidget {
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
-          Hero(tag: taskModel.id, child: TaskCard(taskModel: taskModel)),
+          Hero(
+              tag: taskModel.id,
+              child: Material(
+                  type: MaterialType.transparency,
+                  child: TaskCard(taskModel: taskModel))),
           MyTextField(hintText: "Title", controller: titleController),
           MyTextField(
               hintText: "Description", controller: descriptionController),
