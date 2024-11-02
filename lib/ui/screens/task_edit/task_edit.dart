@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/models/task_model.dart';
 import 'package:todo_app/providers/tasks_provider.dart';
+import 'package:todo_app/ui/screens/home/tabs/tasks/task_card.dart';
 import 'package:todo_app/utils/app_text_styles.dart';
 import 'package:todo_app/widgets/my_date_picker.dart';
 import 'package:todo_app/widgets/my_text_field.dart';
@@ -45,7 +47,8 @@ class TaskEdit extends StatelessWidget {
   }
 
   Container _buildEditBox(BuildContext context) {
-    String taskId = ModalRoute.of(context)!.settings.arguments as String;
+    TaskModel taskModel =
+        ModalRoute.of(context)!.settings.arguments as TaskModel;
     return Container(
       padding: const EdgeInsets.all(16),
       margin: const EdgeInsets.only(bottom: 55),
@@ -56,6 +59,7 @@ class TaskEdit extends StatelessWidget {
         color: theme.primaryColor,
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
@@ -63,49 +67,35 @@ class TaskEdit extends StatelessWidget {
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(
-            height: 50,
-          ),
+          Hero(tag: taskModel.id, child: TaskCard(taskModel: taskModel)),
           MyTextField(hintText: "Title", controller: titleController),
-          const SizedBox(
-            height: 50,
-          ),
           MyTextField(
               hintText: "Description", controller: descriptionController),
-          const SizedBox(
-            height: 50,
-          ),
           Text(
             "Select Time",
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.start,
           ),
-          const SizedBox(
-            height: 50,
-          ),
           MyDatePicker(selectedDate: selectedDate),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 60),
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                ),
-                onPressed: () async {
-                  await tasksProvider.editTaskInFirestore(
-                      taskId: taskId,
-                      title: titleController.text,
-                      description: descriptionController.text,
-                      date: selectedDate);
-                  showToast(
-                      msg: "Task edited successfully",
-                      color: AppColors.doneColor);
-                },
-                child: Text(
-                  "Save Changes",
-                  style: AppTextStyles.intermediate
-                      .copyWith(fontSize: 18, color: AppColors.white),
-                )),
-          )
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+              onPressed: () async {
+                await tasksProvider.editTaskInFirestore(
+                    taskId: taskModel.id,
+                    title: titleController.text,
+                    description: descriptionController.text,
+                    date: selectedDate);
+                showToast(
+                    msg: "Task edited successfully",
+                    color: AppColors.doneColor);
+              },
+              child: Text(
+                "Save Changes",
+                style: AppTextStyles.intermediate
+                    .copyWith(fontSize: 18, color: AppColors.white),
+              ))
         ],
       ),
     );
