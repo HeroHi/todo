@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,23 +41,24 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Add New Task",
+            context.tr("addNewTask"),
             style: theme.textTheme.titleMedium!
                 .copyWith(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           MyTextField(
-              hintText: "enter your title", controller: titleController),
+              hintText: context.tr("enterYourTitle"),
+              controller: titleController),
           MyTextField(
-              hintText: "enter task description",
+              hintText: context.tr("enterTaskDescription"),
               controller: descriptionController),
           Text(
-            "Select Date",
+            context.tr("selectDate"),
             style: theme.textTheme.titleMedium,
             textAlign: TextAlign.start,
           ),
           _buildDatePicker(),
-          Text("Select Time", style: theme.textTheme.titleMedium),
+          Text(context.tr("selectTime"), style: theme.textTheme.titleMedium),
           _buildTimePicker(),
           ElevatedButton(
               style:
@@ -67,7 +69,7 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                 Navigator.pop(context);
               },
               child: Text(
-                "Add",
+                context.tr("add"),
                 style: theme.textTheme.titleLarge,
               ))
         ],

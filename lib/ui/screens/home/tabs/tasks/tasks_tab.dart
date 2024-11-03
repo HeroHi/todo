@@ -1,4 +1,5 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/tasks_provider.dart';
@@ -87,6 +88,7 @@ class _TasksTabState extends State<TasksTab> {
     TextStyle timeLineStyle =
         widget.theme.textTheme.titleLarge!.copyWith(fontSize: 15);
     return EasyDateTimeLine(
+        locale: context.deviceLocale.languageCode,
         headerProps: const EasyHeaderProps(showHeader: false),
         initialDate: DateTime.now(),
         activeColor: AppColors.primary,

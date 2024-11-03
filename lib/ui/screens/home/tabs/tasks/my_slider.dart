@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +36,7 @@ class MySlider extends StatelessWidget {
               },
               backgroundColor: AppColors.deleteColor,
               icon: Icons.delete,
-              label: "Delete",
+              label: context.tr("delete"),
               foregroundColor: Colors.white,
               autoClose: true,
             ),
@@ -47,7 +48,7 @@ class MySlider extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
               backgroundColor: Colors.transparent,
               foregroundColor: theme.primaryColorDark,
-              label: "Edit",
+              label: context.tr("edit"),
               icon: Icons.edit,
             ),
           ]),

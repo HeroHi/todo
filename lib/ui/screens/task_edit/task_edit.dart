@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
@@ -36,7 +37,7 @@ class _TaskEditState extends State<TaskEdit> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: const Text("To Do List"),
+        title: Text(context.tr("toDo")),
         automaticallyImplyLeading: true,
       ),
       body: Column(
@@ -70,7 +71,7 @@ class _TaskEditState extends State<TaskEdit> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Edit Task",
+            context.tr("editTask"),
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.center,
           ),
@@ -79,17 +80,19 @@ class _TaskEditState extends State<TaskEdit> {
               child: Material(
                   type: MaterialType.transparency,
                   child: TaskCard(taskModel: taskModel))),
-          MyTextField(hintText: "Title", controller: titleController),
           MyTextField(
-              hintText: "Description", controller: descriptionController),
+              hintText: context.tr("title"), controller: titleController),
+          MyTextField(
+              hintText: context.tr("description"),
+              controller: descriptionController),
           Text(
-            "Select Time",
+            context.tr("selectTime"),
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.start,
           ),
           _buildTimePicker(),
           Text(
-            "Select Date",
+            context.tr("selectDate"),
             style: theme.textTheme.titleLarge,
             textAlign: TextAlign.start,
           ),
@@ -108,12 +111,12 @@ class _TaskEditState extends State<TaskEdit> {
                 taskModel.title = titleController.text;
                 taskModel.description = descriptionController.text;
                 showToast(
-                    msg: "Task edited successfully",
+                    msg: context.tr("taskEditSuccess"),
                     color: AppColors.doneColor);
                 setState(() {});
               },
               child: Text(
-                "Save Changes",
+                context.tr("saveChanges"),
                 style: AppTextStyles.intermediate
                     .copyWith(fontSize: 18, color: AppColors.white),
               ))

@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/ui/screens/login/login.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/utils/app_text_styles.dart';
+import 'package:todo_app/widgets/login_reg_field.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
 import '../../../firebase/auth/firebase_auth_manager.dart';
@@ -34,7 +36,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final GlobalKey<FormState> emailKey = GlobalKey();
     final GlobalKey<FormState> passwordKey = GlobalKey();
     return Scaffold(
-      backgroundColor: theme.primaryColor,
       body: Padding(
         padding:
             const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 16),
@@ -42,19 +43,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Sign Up",
+              context.tr("signUp"),
               style: theme.textTheme.titleLarge!.copyWith(fontSize: 40),
             ),
             Text(
-              "Please enter your details",
+              context.tr("plsEnterYourDetails"),
               style: theme.textTheme.labelMedium,
             ),
             _buildTextField(
+                prefixIcon: Icon(
+                  Icons.person,
+                  color: theme.primaryColorDark,
+                ),
                 key: userNameKey,
-                title: "Name",
-                hintText: "username",
+                title: context.tr("name"),
+                hintText: context.tr("userName"),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return "Cannot be empty";
+                  if (value == null || value.isEmpty)
+                    return context.tr("required");
                   if (value.length < 4) {
                     return "username should be at least 4 characters";
                   }
@@ -62,22 +68,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 },
                 controller: userNameController),
             _buildTextField(
+                prefixIcon: Icon(
+                  Icons.email_outlined,
+                  color: theme.primaryColorDark,
+                ),
                 key: emailKey,
-                title: "Email",
+                title: context.tr("email"),
                 hintText: "Example@gmail.com",
                 validator: (value) {
-                  if (value == null || value.isEmpty) return "Cannot be empty";
+                  if (value == null || value.isEmpty)
+                    return context.tr("required");
                   return null;
                 },
                 controller: emailController),
             _buildTextField(
+                prefixIcon: Icon(
+                  Icons.password,
+                  color: theme.primaryColorDark,
+                ),
+                isPassField: true,
                 key: passwordKey,
-                title: "Password",
-                hintText: "At least 8 characters",
+                title: context.tr("password"),
+                hintText: context.tr("atLeast8Char"),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return "Cannot be empty";
+                  if (value == null || value.isEmpty)
+                    return context.tr("required");
                   if (value.length < 8) {
-                    return "Password should be at least 8 characters";
+                    return context.tr("atLeast8Char");
                   }
                   return null;
                 },
@@ -97,8 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       context.mounted) {
                     await FirebaseAuthManager.sendEmailVerificationLink();
                     showToast(
-                        msg:
-                            "A verification link has been sent to your email please check it and verify your email before logging in",
+                        msg: context.tr("plsVerfiyEmail"),
                         color: AppColors.doneColor);
                     Timer.periodic(
                       const Duration(seconds: 5),
@@ -115,7 +131,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }
               },
               child: Text(
-                "Sign Up",
+                context.tr("signUp"),
                 style: AppTextStyles.intermediate.copyWith(
                   color: AppColors.white,
                 ),
@@ -137,6 +153,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       required String hintText,
       required TextEditingController controller,
       required FormFieldValidator<String> validator,
+      required Icon prefixIcon,
+      bool isPassField = false,
       required Key key}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -151,21 +169,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(
             height: 10,
           ),
-          Form(
-            key: key,
-            child: TextFormField(
-              autovalidateMode: AutovalidateMode.onUserInteraction,
+          LoginRegField(
+              prefixIcon: prefixIcon,
+              isPassField: isPassField,
+              formKey: key,
               controller: controller,
               validator: validator,
-              style: theme.textTheme.titleMedium,
-              decoration: InputDecoration(
-                hintText: hintText,
-                hintStyle: theme.textTheme.labelMedium,
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
-              ),
-            ),
-          )
+              hintText: hintText),
         ],
       ),
     );
@@ -185,7 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             Navigator.pushReplacementNamed(context, LoginScreen.routeName);
           },
           child: Text(
-            "Login",
+            context.tr("login"),
             style: theme.textTheme.titleLarge,
           )),
     );

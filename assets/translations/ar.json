@@ -20,5 +20,11 @@
   "userName": "اسم المستخدم",
   "name": "الاسم",
   "atLeast8Char": "على الأقل 8 أحرف",
-  "plsEnterYourDetails": "يرجى إدخال بياناتك"
+  "plsEnterYourDetails": "يرجى إدخال بياناتك",
+  "helloAgain": "اهلا بك!",
+  "plsVerifyEmail": "الرجاء التحقق من بريدك الالكتروني وتوثيق حسابك",
+  "required": "مطلوب",
+  "saveChanges": "حفظ التغييرات",
+  "add": "إضافة",
+  "taskEditSuccess": "تم تعديل المهمة بنجاح"
 }

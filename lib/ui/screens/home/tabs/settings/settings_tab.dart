@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/theme_provider.dart';
@@ -27,19 +28,21 @@ class SettingsTab extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "Language",
+                context.tr("language"),
                 textAlign: TextAlign.start,
                 style: theme.textTheme.titleLarge,
               ),
-              _buildDropDownMenu(context, value: "en", items: [
-                DropdownMenuItem(
-                  child: Text("Arabic"),
-                  value: "ar",
+              _buildDropDownMenu(context,
+                  value: context.deviceLocale.toLanguageTag(),
+                  items: [
+                    DropdownMenuItem(
+                      child: Text("العربية"),
+                      value: "ar",
                 ),
                 DropdownMenuItem(
                   child: Text("English"),
-                  value: "en",
-                )
+                      value: "en-US",
+                    )
               ]),
               const SizedBox(
                 height: 10,
@@ -47,7 +50,7 @@ class SettingsTab extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Mode",
+                    context.tr("darkMode"),
                     textAlign: TextAlign.start,
                     style: theme.textTheme.titleLarge,
                   ),
@@ -79,7 +82,9 @@ class SettingsTab extends StatelessWidget {
         underline: const SizedBox.shrink(),
         value: value,
         items: items,
-        onChanged: (value) {},
+        onChanged: (value) async {
+          await context.setLocale(Locale(value));
+        },
       ),
     );
   }

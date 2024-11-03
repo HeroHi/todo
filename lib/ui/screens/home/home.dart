@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Column(
           children: [
-            const Text("ToDo"),
+            Text(context.tr("toDo")),
             const SizedBox(
               height: 10,
             ),

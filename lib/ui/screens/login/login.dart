@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/ui/screens/home/home.dart';
 import 'package:todo_app/ui/screens/register/register.dart';
 import 'package:todo_app/utils/app_colors.dart';
+import 'package:todo_app/widgets/login_reg_field.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
 import '../../../firebase/auth/firebase_auth_manager.dart';
@@ -13,6 +15,8 @@ class LoginScreen extends StatelessWidget {
   late ThemeData theme;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> emailKey = GlobalKey();
+  final GlobalKey<FormState> passwordKey = GlobalKey();
   static String routeName = "Login";
 
   LoginScreen({super.key});
@@ -27,23 +31,42 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Hello Again!",
+              context.tr("helloAgain"),
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(
               height: 20,
             ),
-            _buildTextFormField(
+            LoginRegField(
+                formKey: emailKey,
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return context.tr("required");
+                  return null;
+                },
                 controller: emailController,
-                hintText: "Email",
-                prefixIcon: Icons.email),
+                hintText: context.tr("email"),
+                prefixIcon: Icon(
+                  Icons.email_outlined,
+                  color: theme.primaryColorDark,
+                )),
             const SizedBox(
               height: 30,
             ),
-            _buildTextFormField(
+            LoginRegField(
+                formKey: passwordKey,
+                validator: (value) {
+                  if (value == null || value.isEmpty)
+                    return context.tr("required");
+                  return null;
+                },
+                isPassField: true,
                 controller: passwordController,
-                hintText: "Password",
-                prefixIcon: Icons.password),
+                hintText: context.tr("password"),
+                prefixIcon: Icon(
+                  Icons.password,
+                  color: theme.primaryColorDark,
+                )),
             _buildLoginButton(context),
             _buildRegisterButton(context),
           ],
@@ -59,55 +82,37 @@ class LoginScreen extends StatelessWidget {
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
           onPressed: () async {
-            await FirebaseAuthManager.login(
-                email: emailController.text, password: passwordController.text);
-            if (FirebaseAuth.instance.currentUser != null && context.mounted) {
-              if (!FirebaseAuth.instance.currentUser!.emailVerified) {
-                showToast(
-                    msg: "please verify your email before logging in",
-                    color: AppColors.deleteColor);
-                Timer.periodic(
-                  const Duration(seconds: 5),
-                  (timer) {
-                    FirebaseAuth.instance.currentUser!.reload();
-                    if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                      Navigator.pushReplacementNamed(context, Home.routeName);
-                      timer.cancel();
-                    }
-                  },
-                );
-              } else {
-                Navigator.pushReplacementNamed(context, Home.routeName);
+            if (passwordKey.currentState!.validate() &&
+                emailKey.currentState!.validate()) {
+              await FirebaseAuthManager.login(
+                  email: emailController.text,
+                  password: passwordController.text);
+              if (FirebaseAuth.instance.currentUser != null &&
+                  context.mounted) {
+                if (!FirebaseAuth.instance.currentUser!.emailVerified) {
+                  showToast(
+                      msg: context.tr("plsVerifyEmail"),
+                      color: AppColors.deleteColor);
+                  Timer.periodic(
+                    const Duration(seconds: 5),
+                    (timer) {
+                      FirebaseAuth.instance.currentUser!.reload();
+                      if (FirebaseAuth.instance.currentUser!.emailVerified) {
+                        Navigator.pushReplacementNamed(context, Home.routeName);
+                        timer.cancel();
+                      }
+                    },
+                  );
+                } else {
+                  Navigator.pushReplacementNamed(context, Home.routeName);
+                }
               }
             }
           },
           child: Text(
-            "Login",
+            context.tr("login"),
             style: theme.textTheme.titleLarge,
           )),
-    );
-  }
-
-  TextFormField _buildTextFormField(
-      {required TextEditingController controller,
-      required String hintText,
-      required IconData prefixIcon}) {
-    return TextFormField(
-      controller: controller,
-      style: theme.textTheme.titleMedium,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        labelText: hintText,
-        labelStyle: theme.textTheme.labelMedium,
-        floatingLabelStyle: theme.textTheme.labelMedium,
-        floatingLabelAlignment: FloatingLabelAlignment.start,
-        prefixIcon: Icon(
-          prefixIcon,
-          color: theme.primaryColorDark,
-        ),
-      ),
     );
   }
 
@@ -125,7 +130,7 @@ class LoginScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, RegisterScreen.routeName);
           },
           child: Text(
-            "Sign Up",
+            context.tr("signUp"),
             style: theme.textTheme.titleLarge,
           )),
     );

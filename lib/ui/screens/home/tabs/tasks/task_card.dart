@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/task_model.dart';
@@ -79,7 +80,7 @@ class _TaskCardState extends State<TaskCard> {
       },
       child: widget.taskModel.isDone
           ? Text(
-              "Done!",
+              context.tr("done"),
               style: AppTextStyles.bold.copyWith(color: stateColor),
             )
           : Container(

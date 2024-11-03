@@ -20,5 +20,11 @@
   "userName": "username",
   "name": "Name",
   "atLeast8Char": "At least 8 characters",
-  "plsEnterYourDetails": "Please enter your details"
+  "plsEnterYourDetails": "Please enter your details",
+  "helloAgain": "Hello Again!",
+  "plsVerifyEmail": "Please verify your email before logging in",
+  "required": "Cannot be empty",
+  "saveChanges": "Save Changes",
+  "add": "Add",
+  "taskEditSuccess": "Task edited successfully"
 }
