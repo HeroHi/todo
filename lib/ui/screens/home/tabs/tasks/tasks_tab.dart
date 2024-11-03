@@ -88,7 +88,7 @@ class _TasksTabState extends State<TasksTab> {
     TextStyle timeLineStyle =
         widget.theme.textTheme.titleLarge!.copyWith(fontSize: 15);
     return EasyDateTimeLine(
-        locale: context.deviceLocale.languageCode,
+        locale: context.locale.languageCode,
         headerProps: const EasyHeaderProps(showHeader: false),
         initialDate: DateTime.now(),
         activeColor: AppColors.primary,

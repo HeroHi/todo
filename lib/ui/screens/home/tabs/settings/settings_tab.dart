@@ -5,11 +5,17 @@ import 'package:todo_app/providers/theme_provider.dart';
 
 import '../../../../../utils/app_colors.dart';
 
-class SettingsTab extends StatelessWidget {
-  late ThemeData theme;
-  late ThemeProvider themeProvider;
+class SettingsTab extends StatefulWidget {
+  const SettingsTab({super.key});
 
-  SettingsTab({super.key});
+  @override
+  State<SettingsTab> createState() => _SettingsTabState();
+}
+
+class _SettingsTabState extends State<SettingsTab> {
+  late ThemeData theme;
+
+  late ThemeProvider themeProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +39,15 @@ class SettingsTab extends StatelessWidget {
                 style: theme.textTheme.titleLarge,
               ),
               _buildDropDownMenu(context,
-                  value: context.deviceLocale.toLanguageTag(),
+                  value: context.locale.languageCode,
                   items: [
-                    DropdownMenuItem(
+                    const DropdownMenuItem(
                       child: Text("العربية"),
                       value: "ar",
                 ),
-                DropdownMenuItem(
-                  child: Text("English"),
-                      value: "en-US",
+                    const DropdownMenuItem(
+                      child: Text("English"),
+                      value: "en",
                     )
               ]),
               const SizedBox(
@@ -69,7 +75,7 @@ class SettingsTab extends StatelessWidget {
       {required List<DropdownMenuItem<dynamic>> items,
       required dynamic value}) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       decoration: BoxDecoration(
         color: theme.primaryColor,
         border: Border.all(color: AppColors.primary),
@@ -78,12 +84,13 @@ class SettingsTab extends StatelessWidget {
       child: DropdownButton(
         isExpanded: true,
         elevation: 0,
-        padding: EdgeInsets.only(left: 12),
+        padding: const EdgeInsets.only(left: 12),
         underline: const SizedBox.shrink(),
         value: value,
         items: items,
         onChanged: (value) async {
           await context.setLocale(Locale(value));
+          setState(() {});
         },
       ),
     );

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/ui/screens/home/home.dart';
 import 'package:todo_app/ui/screens/register/register.dart';
+import 'package:todo_app/ui/screens/splash/splash.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/widgets/login_reg_field.dart';
 import 'package:todo_app/widgets/show_toast.dart';
@@ -98,13 +98,14 @@ class LoginScreen extends StatelessWidget {
                     (timer) {
                       FirebaseAuth.instance.currentUser!.reload();
                       if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                        Navigator.pushReplacementNamed(context, Home.routeName);
+                        Navigator.pushReplacementNamed(
+                            context, Splash.routeName);
                         timer.cancel();
                       }
                     },
                   );
                 } else {
-                  Navigator.pushReplacementNamed(context, Home.routeName);
+                  Navigator.pushReplacementNamed(context, Splash.routeName);
                 }
               }
             }

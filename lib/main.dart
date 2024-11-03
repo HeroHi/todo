@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:todo_app/providers/theme_provider.dart';
 import 'package:todo_app/ui/screens/home/home.dart';
 import 'package:todo_app/ui/screens/login/login.dart';
 import 'package:todo_app/ui/screens/register/register.dart';
+import 'package:todo_app/ui/screens/splash/splash.dart';
 import 'package:todo_app/ui/screens/task_edit/task_edit.dart';
 import 'package:todo_app/utils/app_themes.dart';
 
@@ -47,9 +49,13 @@ class MyApp extends StatelessWidget {
           Home.routeName: (_) => Home(),
           LoginScreen.routeName: (_) => LoginScreen(),
           RegisterScreen.routeName: (_) => RegisterScreen(),
-          TaskEdit.routeName: (_) => TaskEdit(),
+          TaskEdit.routeName: (_) => const TaskEdit(),
+          Splash.routeName: (_) => const Splash(),
         },
-        initialRoute: LoginScreen.routeName,
+        initialRoute: (FirebaseAuth.instance.currentUser != null &&
+                FirebaseAuth.instance.currentUser!.emailVerified)
+            ? Splash.routeName
+            : LoginScreen.routeName,
       ),
     );
   }
