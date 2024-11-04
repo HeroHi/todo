@@ -7,6 +7,7 @@ import 'package:todo_app/ui/screens/register/register.dart';
 import 'package:todo_app/ui/screens/splash/splash.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/widgets/login_reg_field.dart';
+import 'package:todo_app/widgets/my_loader.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
 import '../../../firebase/auth/firebase_auth_manager.dart';
@@ -82,11 +83,14 @@ class LoginScreen extends StatelessWidget {
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
           onPressed: () async {
+            await FirebaseAuth.instance.signOut();
             if (passwordKey.currentState!.validate() &&
                 emailKey.currentState!.validate()) {
+              showLoading(context);
               await FirebaseAuthManager.login(
                   email: emailController.text,
                   password: passwordController.text);
+              hideLoading(context);
               if (FirebaseAuth.instance.currentUser != null &&
                   context.mounted) {
                 if (!FirebaseAuth.instance.currentUser!.emailVerified) {

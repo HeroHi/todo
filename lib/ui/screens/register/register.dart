@@ -7,6 +7,7 @@ import 'package:todo_app/ui/screens/login/login.dart';
 import 'package:todo_app/utils/app_colors.dart';
 import 'package:todo_app/utils/app_text_styles.dart';
 import 'package:todo_app/widgets/login_reg_field.dart';
+import 'package:todo_app/widgets/my_loader.dart';
 import 'package:todo_app/widgets/show_toast.dart';
 
 import '../../../firebase/auth/firebase_auth_manager.dart';
@@ -39,110 +40,116 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Padding(
         padding:
             const EdgeInsets.only(left: 16, right: 16, top: 40, bottom: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              context.tr("signUp"),
-              style: theme.textTheme.titleLarge!.copyWith(fontSize: 40),
-            ),
-            Text(
-              context.tr("plsEnterYourDetails"),
-              style: theme.textTheme.labelMedium,
-            ),
-            _buildTextField(
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: theme.primaryColorDark,
-                ),
-                key: userNameKey,
-                title: context.tr("name"),
-                hintText: context.tr("userName"),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return context.tr("required");
-                  if (value.length < 4) {
-                    return "username should be at least 4 characters";
-                  }
-                  return null;
-                },
-                controller: userNameController),
-            _buildTextField(
-                prefixIcon: Icon(
-                  Icons.email_outlined,
-                  color: theme.primaryColorDark,
-                ),
-                key: emailKey,
-                title: context.tr("email"),
-                hintText: "Example@gmail.com",
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return context.tr("required");
-                  return null;
-                },
-                controller: emailController),
-            _buildTextField(
-                prefixIcon: Icon(
-                  Icons.password,
-                  color: theme.primaryColorDark,
-                ),
-                isPassField: true,
-                key: passwordKey,
-                title: context.tr("password"),
-                hintText: context.tr("atLeast8Char"),
-                validator: (value) {
-                  if (value == null || value.isEmpty)
-                    return context.tr("required");
-                  if (value.length < 8) {
-                    return context.tr("atLeast8Char");
-                  }
-                  return null;
-                },
-                controller: passwordController),
-            ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
-              onPressed: () async {
-                if (userNameKey.currentState!.validate() &&
-                    emailKey.currentState!.validate() &&
-                    passwordKey.currentState!.validate()) {
-                  await FirebaseAuthManager.register(
-                      userName: userNameController.text,
-                      email: emailController.text,
-                      password: passwordController.text);
-                  if (FirebaseAuth.instance.currentUser != null &&
-                      context.mounted) {
-                    await FirebaseAuthManager.sendEmailVerificationLink();
-                    showToast(
-                        msg: context.tr("plsVerfiyEmail"),
-                        color: AppColors.doneColor);
-                    Timer.periodic(
-                      const Duration(seconds: 5),
-                      (timer) {
-                        FirebaseAuth.instance.currentUser!.reload();
-                        if (FirebaseAuth.instance.currentUser!.emailVerified) {
-                          Navigator.pushReplacementNamed(
-                              context, LoginScreen.routeName);
-                          timer.cancel();
-                        }
-                      },
-                    );
-                  }
-                }
-              },
-              child: Text(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
                 context.tr("signUp"),
-                style: AppTextStyles.intermediate.copyWith(
-                  color: AppColors.white,
-                ),
-                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge!.copyWith(fontSize: 40),
               ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            _buildLoginButton(context),
-          ],
+              Text(
+                context.tr("plsEnterYourDetails"),
+                style: theme.textTheme.labelMedium,
+              ),
+              _buildTextField(
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: theme.primaryColorDark,
+                  ),
+                  key: userNameKey,
+                  title: context.tr("name"),
+                  hintText: context.tr("userName"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return context.tr("required");
+                    if (value.length < 4) {
+                      return "username should be at least 4 characters";
+                    }
+                    return null;
+                  },
+                  controller: userNameController),
+              _buildTextField(
+                  prefixIcon: Icon(
+                    Icons.email_outlined,
+                    color: theme.primaryColorDark,
+                  ),
+                  key: emailKey,
+                  title: context.tr("email"),
+                  hintText: "Example@gmail.com",
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return context.tr("required");
+                    return null;
+                  },
+                  controller: emailController),
+              _buildTextField(
+                  prefixIcon: Icon(
+                    Icons.password,
+                    color: theme.primaryColorDark,
+                  ),
+                  isPassField: true,
+                  key: passwordKey,
+                  title: context.tr("password"),
+                  hintText: context.tr("atLeast8Char"),
+                  validator: (value) {
+                    if (value == null || value.isEmpty)
+                      return context.tr("required");
+                    if (value.length < 8) {
+                      return context.tr("atLeast8Char");
+                    }
+                    return null;
+                  },
+                  controller: passwordController),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary),
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  if (userNameKey.currentState!.validate() &&
+                      emailKey.currentState!.validate() &&
+                      passwordKey.currentState!.validate()) {
+                    showLoading(context);
+                    await FirebaseAuthManager.register(
+                        userName: userNameController.text,
+                        email: emailController.text,
+                        password: passwordController.text);
+                    hideLoading(context);
+                    if (FirebaseAuth.instance.currentUser != null &&
+                        context.mounted) {
+                      await FirebaseAuthManager.sendEmailVerificationLink();
+                      showToast(
+                          msg: context.tr("verifyEmailSent"),
+                          color: AppColors.doneColor);
+                      Timer.periodic(
+                        const Duration(seconds: 5),
+                        (timer) {
+                          FirebaseAuth.instance.currentUser!.reload();
+                          if (FirebaseAuth
+                              .instance.currentUser!.emailVerified) {
+                            Navigator.pushReplacementNamed(
+                                context, LoginScreen.routeName);
+                            timer.cancel();
+                          }
+                        },
+                      );
+                    }
+                  }
+                },
+                child: Text(
+                  context.tr("signUp"),
+                  style: AppTextStyles.intermediate.copyWith(
+                    color: AppColors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              _buildLoginButton(context),
+            ],
+          ),
         ),
       ),
     );

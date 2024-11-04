@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/providers/tasks_provider.dart';
 import 'package:todo_app/ui/screens/home/tabs/tasks/task_card.dart';
+import 'package:todo_app/widgets/my_loader.dart';
 
 import '../../../../../utils/app_colors.dart';
 import 'my_slider.dart';
@@ -19,12 +20,13 @@ class TasksTab extends StatefulWidget {
 
 class _TasksTabState extends State<TasksTab> {
   late TasksProvider tasksProvider;
+  late Future taskUpdater;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      tasksProvider.updateTasks();
+      taskUpdater = tasksProvider.updateTasks();
     });
   }
 
@@ -92,9 +94,13 @@ class _TasksTabState extends State<TasksTab> {
         headerProps: const EasyHeaderProps(showHeader: false),
         initialDate: DateTime.now(),
         activeColor: AppColors.primary,
-        onDateChange: (selectedDate) {
+        onDateChange: (selectedDate) async {
           tasksProvider.selectedDate = selectedDate;
-          tasksProvider.updateTasks();
+          showLoading(context);
+          await tasksProvider.updateTasks();
+          if (context.mounted) {
+            hideLoading(context);
+          }
         },
         dayProps: EasyDayProps(
             todayHighlightStyle: TodayHighlightStyle.withBackground,

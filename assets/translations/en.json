@@ -26,5 +26,6 @@
   "required": "Cannot be empty",
   "saveChanges": "Save Changes",
   "add": "Add",
-  "taskEditSuccess": "Task edited successfully"
+  "taskEditSuccess": "Task edited successfully",
+  "verifyEmailSent": "An verification link has been sent to your email please verify your email to continue registeration"
 }

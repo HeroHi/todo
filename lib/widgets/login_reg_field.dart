@@ -7,7 +7,7 @@ class LoginRegField extends StatefulWidget {
   final FormFieldValidator<String> validator;
   final Key formKey;
   final Icon prefixIcon;
-  bool isHidden = false;
+  late bool isHidden = isPassField;
 
   LoginRegField(
       {super.key,

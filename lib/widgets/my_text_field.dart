@@ -11,6 +11,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return TextField(
+      style: theme.textTheme.titleMedium,
       controller: controller,
       decoration: InputDecoration(
         border: const UnderlineInputBorder(),
